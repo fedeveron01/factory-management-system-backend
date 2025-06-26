@@ -2,13 +2,14 @@ package product_handler
 
 import (
 	"encoding/json"
+	"io"
+	"net/http"
+	"strconv"
+
 	"github.com/fedeveron01/golang-base/cmd/adapters/gateways"
 	core_errors "github.com/fedeveron01/golang-base/cmd/core/errors"
 	product_usecase "github.com/fedeveron01/golang-base/cmd/usecases/product"
 	"github.com/gorilla/mux"
-	"io"
-	"net/http"
-	"strconv"
 
 	"github.com/fedeveron01/golang-base/cmd/adapters/entrypoints"
 	"github.com/fedeveron01/golang-base/cmd/core/entities"
@@ -20,6 +21,7 @@ type ProductHandlerInterface interface {
 	GetByName(w http.ResponseWriter, r *http.Request)
 	GroupedByName(w http.ResponseWriter, r *http.Request)
 	GroupedByNameMap(w http.ResponseWriter, r *http.Request)
+	GroupedByNameMapWithStock(w http.ResponseWriter, r *http.Request)
 	Create(w http.ResponseWriter, r *http.Request)
 	Update(w http.ResponseWriter, r *http.Request)
 	Delete(w http.ResponseWriter, r *http.Request)
@@ -129,6 +131,22 @@ func (p *ProductHandler) GroupedByNameMap(w http.ResponseWriter, r *http.Request
 	}
 
 	productsResponse := ToProductsByNameMapResponse(products)
+
+	json.NewEncoder(w).Encode(productsResponse)
+}
+
+// GroupedByNameMapWithStock Handle api/product/byNameMapWithStock GET request
+func (p *ProductHandler) GroupedByNameMapWithStock(w http.ResponseWriter, r *http.Request) {
+	if !p.IsAuthorized(w, r) {
+		return
+	}
+	products, err := p.productUseCase.GroupedByNameMapWithStock()
+	if err != nil {
+		p.WriteErrorResponse(w, err)
+		return
+	}
+
+	productsResponse := ToProductsByNameMapWithStockResponse(products)
 
 	json.NewEncoder(w).Encode(productsResponse)
 }

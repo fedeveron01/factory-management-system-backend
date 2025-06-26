@@ -10,6 +10,7 @@ import (
 
 type ProductRepository interface {
 	FindAll() ([]gateway_entities.Product, error)
+	FindAllWithVariations() ([]gateway_entities.Product, error)
 	FindById(id uint) *gateway_entities.Product
 	FindByName(name string) []*gateway_entities.Product
 	FindByNameAndColor(name string, color string) *gateway_entities.Product
@@ -31,6 +32,18 @@ func NewProductGateway(productRepository ProductRepository) *ProductGatewayImpl 
 
 func (e *ProductGatewayImpl) FindAll() ([]entities.Product, error) {
 	productsDB, err := e.productRepository.FindAll()
+	if err != nil {
+		return nil, err
+	}
+	products := make([]entities.Product, len(productsDB))
+	for i, productDB := range productsDB {
+		products[i] = e.ToBusinessEntity(productDB)
+	}
+	return products, err
+}
+
+func (e *ProductGatewayImpl) FindAllWithVariations() ([]entities.Product, error) {
+	productsDB, err := e.productRepository.FindAllWithVariations()
 	if err != nil {
 		return nil, err
 	}
