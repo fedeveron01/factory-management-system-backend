@@ -11,6 +11,7 @@ type ProductUseCase interface {
 	FindByName(name string) ([]entities.Product, error)
 	GroupedByName() ([][]entities.Product, error)
 	GroupedByNameMap() (map[string][]entities.Product, error)
+	GroupedByNameMapWithStock() (map[string][]entities.Product, error)
 	CreateProduct(product entities.Product) (entities.Product, error)
 	UpdateProduct(product entities.Product) (entities.Product, error)
 	DeleteProduct(id uint) error
@@ -19,6 +20,7 @@ type ProductUseCase interface {
 
 type ProductGateway interface {
 	FindAll() ([]entities.Product, error)
+	FindAllWithVariations() ([]entities.Product, error)
 	FindById(id uint) *entities.Product
 	FindByName(name string) []entities.Product
 	FindByNameAndColor(name string, color string) *entities.Product
@@ -98,6 +100,37 @@ func (i *Implementation) GroupedByNameMap() (map[string][]entities.Product, erro
 	return grouped, nil
 }
 
+func (i *Implementation) GroupedByNameMapWithStock() (map[string][]entities.Product, error) {
+	products, err := i.productGateway.FindAllWithVariations()
+	if err != nil {
+		return nil, err
+	}
+
+	// Calcular el stock total para cada producto
+	for i := range products {
+		totalStock := 0.0 // Inicializar en 0
+
+		if len(products[i].ProductVariation) > 0 {
+			// Si tiene variaciones, sumar solo el stock de las variaciones
+			for _, variation := range products[i].ProductVariation {
+				totalStock += variation.Stock
+			}
+		} else {
+			// Si no tiene variaciones, usar el stock base del producto
+			totalStock = products[i].Stock
+		}
+
+		products[i].Stock = totalStock // Asignar el stock total calculado
+	}
+
+	grouped := make(map[string][]entities.Product)
+	for _, product := range products {
+		grouped[product.Name] = append(grouped[product.Name], product)
+	}
+
+	return grouped, nil
+}
+
 func (i *Implementation) CreateProduct(product entities.Product) (entities.Product, error) {
 	if product.Name == "" {
 		return entities.Product{}, core_errors.NewBadRequestError("product name is required")
@@ -126,7 +159,7 @@ func (i *Implementation) UpdateProduct(product entities.Product) (entities.Produ
 	}
 
 	found := i.productGateway.FindById(product.ID)
-	if found == nil && found.ID != product.ID {
+	if found == nil {
 		return entities.Product{}, core_errors.NewInternalServerError("product not exist")
 	}
 

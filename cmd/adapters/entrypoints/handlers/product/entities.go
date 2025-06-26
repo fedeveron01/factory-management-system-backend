@@ -19,6 +19,16 @@ type ProductResponse struct {
 	Price       float64 `json:"price"`
 }
 
+type ProductWithStockResponse struct {
+	Id          float64 `json:"id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description"`
+	Color       string  `json:"color"`
+	ImageUrl    string  `json:"imageUrl"`
+	Price       float64 `json:"price"`
+	Stock       float64 `json:"stock"`
+}
+
 type ProductVariationResponse struct {
 	Id     float64 `json:"id"`
 	Number float64 `json:"number"`

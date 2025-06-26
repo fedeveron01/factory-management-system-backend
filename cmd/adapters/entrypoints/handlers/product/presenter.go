@@ -25,6 +25,18 @@ func ToProductResponse(product entities.Product) ProductResponse {
 	}
 }
 
+func ToProductWithStockResponse(product entities.Product) ProductWithStockResponse {
+	return ProductWithStockResponse{
+		Id:          float64(product.ID),
+		Name:        product.Name,
+		Description: product.Description,
+		Color:       product.Color,
+		ImageUrl:    product.ImageUrl,
+		Price:       product.Price,
+		Stock:       product.Stock,
+	}
+}
+
 func ToProductsByNameResponse(products [][]entities.Product) [][]ProductResponse {
 	var productResponses [][]ProductResponse
 	for _, product := range products {
@@ -37,6 +49,18 @@ func ToProductsByNameMapResponse(products map[string][]entities.Product) map[str
 	productResponses := make(map[string][]ProductResponse)
 	for key, value := range products {
 		productResponses[key] = ToProductsResponse(value)
+	}
+	return productResponses
+}
+
+func ToProductsByNameMapWithStockResponse(products map[string][]entities.Product) map[string][]ProductWithStockResponse {
+	productResponses := make(map[string][]ProductWithStockResponse)
+	for key, value := range products {
+		var productWithStockResponses []ProductWithStockResponse
+		for _, product := range value {
+			productWithStockResponses = append(productWithStockResponses, ToProductWithStockResponse(product))
+		}
+		productResponses[key] = productWithStockResponses
 	}
 	return productResponses
 }
