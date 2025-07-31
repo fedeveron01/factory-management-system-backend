@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop # Cambia esto al nombre de tu rama principal
+  workflow_dispatch:
 
 jobs:
   deploy:
