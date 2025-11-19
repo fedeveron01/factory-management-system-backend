@@ -7,6 +7,7 @@ type Product struct {
 	Name             string
 	Description      string
 	Color            string
+	SizeType         string
 	Size             float64
 	ImageUrl         string
 	Price            float64

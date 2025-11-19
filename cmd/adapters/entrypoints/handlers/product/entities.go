@@ -15,6 +15,7 @@ type ProductResponse struct {
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
 	Color       string  `json:"color"`
+	SizeType    string  `json:"sizeType"`
 	ImageUrl    string  `json:"imageUrl"`
 	Price       float64 `json:"price"`
 }
@@ -24,6 +25,7 @@ type ProductWithStockResponse struct {
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
 	Color       string  `json:"color"`
+	SizeType    string  `json:"sizeType"`
 	ImageUrl    string  `json:"imageUrl"`
 	Price       float64 `json:"price"`
 	Stock       float64 `json:"stock"`
@@ -41,6 +43,7 @@ type ProductWithAssignationsResponse struct {
 	Description      string                     `json:"description"`
 	Color            string                     `json:"color"`
 	Size             float64                    `json:"size"`
+	SizeType         string                     `json:"sizeType"`
 	ImageUrl         string                     `json:"imageUrl"`
 	Price            float64                    `json:"price"`
 	Assignations     []AssignationResponse      `json:"assignations"`
@@ -53,6 +56,7 @@ type ProductWithVariationsResponse struct {
 	Name             string                     `json:"name"`
 	Description      string                     `json:"description"`
 	Color            string                     `json:"color"`
+	SizeType         string                     `json:"sizeType"`
 	ImageUrl         string                     `json:"imageUrl"`
 	Price            float64                    `json:"price"`
 	ProductVariation []ProductVariationResponse `json:"productVariation"`
