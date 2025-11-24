@@ -69,7 +69,7 @@ func ToMovementDetailsResponse(movementDetails []entities.MovementDetail) []Move
 
 func ToMovementDetailResponse(movementDetail entities.MovementDetail) MovementDetailResponse {
 	var materialID uint
-	if movementDetail.Material != nil {
+	if movementDetail.Material != nil && movementDetail.Material.ID != 0 {
 		materialID = movementDetail.Material.ID
 		return MovementDetailResponse{
 			ID:         movementDetail.ID,
@@ -79,18 +79,24 @@ func ToMovementDetailResponse(movementDetail entities.MovementDetail) MovementDe
 			Material:   ToMaterialResponse(*movementDetail.Material),
 		}
 	}
-	var productVariationID uint
-	if movementDetail.ProductVariation != nil {
-		productVariationID = movementDetail.ProductVariation.ID
+	if movementDetail.ProductVariation != nil && movementDetail.ProductVariation.ID != 0 {
 		return MovementDetailResponse{
-			ID:                 movementDetail.ID,
-			ProductVariationID: productVariationID,
-			Quantity:           movementDetail.Quantity,
-			Price:              movementDetail.Price,
+			ID:       movementDetail.ID,
+			Quantity: movementDetail.Quantity,
+			Price:    movementDetail.Price,
+			ProductVariation: &ProductVariationResponse{
+				ID:       movementDetail.ProductVariation.ID,
+				Number:   movementDetail.ProductVariation.Number,
+				Quantity: movementDetail.Quantity,
+				Product: &ProductInfoResponse{
+					ID:    movementDetail.ProductVariation.Product.ID,
+					Name:  movementDetail.ProductVariation.Product.Name,
+					Color: movementDetail.ProductVariation.Product.Color,
+				},
+			},
 		}
 	}
 	return MovementDetailResponse{}
-
 }
 
 func ToMovementsResponse(movements []entities.Movement) []MovementResponse {

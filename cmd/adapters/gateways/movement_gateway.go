@@ -177,6 +177,20 @@ func (i *MovementGatewayImpl) toBusinessMovementDetail(movementDetail gateway_en
 			EntitiesBase: core.EntitiesBase{
 				ID: movementDetail.ProductVariation.ID,
 			},
+			Number: movementDetail.ProductVariation.Number,
+			Stock:  movementDetail.ProductVariation.Stock,
+			Product: entities.Product{
+				EntitiesBase: core.EntitiesBase{
+					ID: movementDetail.ProductVariation.Product.ID,
+				},
+				Name:             movementDetail.ProductVariation.Product.Name,
+				Description:      movementDetail.ProductVariation.Product.Description,
+				Color:            movementDetail.ProductVariation.Product.Color,
+				Size:             movementDetail.ProductVariation.Product.Size,
+				ImageUrl:         movementDetail.ProductVariation.Product.ImageUrl,
+				Price:            movementDetail.ProductVariation.Product.Price,
+				Stock:            movementDetail.ProductVariation.Product.Stock,
+			},
 		}
 	}
 
@@ -187,5 +201,6 @@ func (i *MovementGatewayImpl) toBusinessMovementDetail(movementDetail gateway_en
 		Material:         material,
 		ProductVariation: productVariation,
 		Quantity:         movementDetail.Quantity,
+		Price:            movementDetail.Price,
 	}
 }
